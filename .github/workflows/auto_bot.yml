@@ -1,0 +1,158 @@
+name: 🤖 Telegram Auto Bot
+
+on:
+  schedule:
+    # Har 1 ghante run hoga (24/7)
+    - cron: '0 */1 * * *'
+  workflow_dispatch:    # Manual run ke liye
+
+jobs:
+  run-telegram-bot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    
+    steps:
+    # Step 1: Code download karein
+    - name: 📥 Checkout code
+      uses: actions/checkout@v3
+      
+    # Step 2: Python setup karein  
+    - name: 🐍 Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    # Step 3: Libraries install karein
+    - name: 📚 Install dependencies
+      run: pip install telethon openai schedule nbconvert
+        
+    # Step 4: Notebook to Python convert karein
+    - name: 🔄 Convert notebook to script
+      run: jupyter nbconvert --to python telegram_bot.ipynb
+        
+    # Step 5: Account 1 run karein
+    - name: 📱 Run Account 1
+      env:
+        API_ID: ${{ secrets.API_ID }}
+        API_HASH: ${{ secrets.API_HASH }}
+        PHONE_1: ${{ secrets.PHONE_1 }}
+        AFFILIATE_LINK: ${{ secrets.AFFILIATE_LINK }}
+      run: python -c "
+        import asyncio
+        import random
+        from telethon import TelegramClient
+        
+        async def main():
+            print('🚀 Starting Account 1...')
+            client = TelegramClient('session_acc1', ${{ secrets.API_ID }}, '${{ secrets.API_HASH }}')
+            await client.start('${{ secrets.PHONE_1 }}')
+            print('✅ Account 1 connected!')
+            
+            groups = [
+                'https://t.me/Radiklar_tanishuvlar1',
+                'https://t.me/friendshub03',
+                'https://t.me/UA_servis_UK',
+                'https://t.me/prague_brno_ostrava', 
+                'https://t.me/londontalks_ua'
+            ]
+            
+            for group in groups:
+                message = '🚀 500% BONUS! Promocode: OGGY\\n${{ secrets.AFFILIATE_LINK }}'
+                await client.send_message(group, message)
+                print(f'✅ Sent to {group}')
+                await asyncio.sleep(120)
+            
+            await client.disconnect()
+            print('🎉 Account 1 completed!')
+        
+        asyncio.run(main())
+        "
+      
+    # Step 6: 10 minutes wait
+    - name: ⏳ Wait 10 minutes
+      run: sleep 600
+      
+    # Step 7: Account 2 run karein
+    - name: 📱 Run Account 2
+      env:
+        API_ID: ${{ secrets.API_ID }}
+        API_HASH: ${{ secrets.API_HASH }}
+        PHONE_2: ${{ secrets.PHONE_2 }}
+        AFFILIATE_LINK: ${{ secrets.AFFILIATE_LINK }}
+      run: python -c "
+        import asyncio
+        from telethon import TelegramClient
+        
+        async def main():
+            print('🚀 Starting Account 2...')
+            client = TelegramClient('session_acc2', ${{ secrets.API_ID }}, '${{ secrets.API_HASH }}')
+            await client.start('${{ secrets.PHONE_2 }}')
+            print('✅ Account 2 connected!')
+            
+            groups = [
+                'https://t.me/x_1xbet',
+                'https://t.me/bocaijiaoliu2',
+                'https://t.me/Khmerimpire7895',
+                'https://t.me/cross_promotions1',
+                'https://t.me/jobs_khmer'
+            ]
+            
+            for group in groups:
+                message = '💰 GET 500% BONUS! Code: OGGY\\n${{ secrets.AFFILIATE_LINK }}'
+                await client.send_message(group, message)
+                print(f'✅ Sent to {group}')
+                await asyncio.sleep(120)
+            
+            await client.disconnect()
+            print('🎉 Account 2 completed!')
+        
+        asyncio.run(main())
+        "
+      
+    # Step 8: 10 minutes wait  
+    - name: ⏳ Wait 10 minutes
+      run: sleep 600
+      
+    # Step 9: Account 3 run karein
+    - name: 📱 Run Account 3
+      env:
+        API_ID: ${{ secrets.API_ID }}
+        API_HASH: ${{ secrets.API_HASH }}
+        PHONE_3: ${{ secrets.PHONE_3 }}
+        AFFILIATE_LINK: ${{ secrets.AFFILIATE_LINK }}
+      run: python -c "
+        import asyncio
+        from telethon import TelegramClient
+        
+        async def main():
+            print('🚀 Starting Account 3...')
+            client = TelegramClient('session_acc3', ${{ secrets.API_ID }}, '${{ secrets.API_HASH }}')
+            await client.start('${{ secrets.PHONE_3 }}')
+            print('✅ Account 3 connected!')
+            
+            groups = [
+                'https://t.me/studentkichatik',
+                'https://t.me/pasu_parichar2025',
+                'https://t.me/solanarocketschat',
+                'https://t.me/onlineearningideas',
+                'https://t.me/freeabyssinia',
+                'https://t.me/svoilondon',
+                'https://t.me/nashiyfranchii',
+                'https://t.me/korubor11',
+                'https://t.me/oejagafa',
+                'https://t.me/videnua',
+                'https://t.me/polandukraine1',
+                'https://t.me/earningmoneyeth'
+            ]
+            
+            for group in groups:
+                message = '🏆 500% WELCOME BONUS! OGGY\\n${{ secrets.AFFILIATE_LINK }}'
+                await client.send_message(group, message)
+                print(f'✅ Sent to {group}')
+                await asyncio.sleep(120)
+            
+            await client.disconnect()
+            print('🎉 Account 3 completed!')
+        
+        asyncio.run(main())
+        "
