@@ -1,0 +1,151 @@
+name: "Telegram Auto Bot"
+
+on:
+  schedule:
+    - cron: "0 */1 * * *"
+  workflow_dispatch:
+
+jobs:
+  run-telegram-bot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    
+    steps:
+    - name: "Checkout code"
+      uses: actions/checkout@v3
+      
+    - name: "Setup Python"
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.9"
+        
+    - name: "Install dependencies"
+      run: pip install telethon
+      
+    - name: "Create bot script"
+      run: |
+        cat > bot_script.py << 'EOF'
+        import asyncio
+        import os
+        import random
+        from telethon import TelegramClient
+        
+        # All Telegram Groups
+        TELEGRAM_GROUPS = [
+            "https://t.me/x_1xbet",
+            "https://t.me/bocaijiaoliu2",
+            "https://t.me/Khmerimpire7895", 
+            "https://t.me/cross_promotions1",
+            "https://t.me/jobs_khmer",
+            "https://t.me/Radiklar_tanishuvlar1",
+            "https://t.me/friendshub03",
+            "https://t.me/UA_servis_UK",
+            "https://t.me/prague_brno_ostrava",
+            "https://t.me/londontalks_ua",
+            "https://t.me/studentkichatik",
+            "https://t.me/pasu_parichar2025",
+            "https://t.me/solanarocketschat",
+            "https://t.me/earningmoneyeth",
+            "https://t.me/freeabyssinia",
+            "https://t.me/svoilondon",
+            "https://t.me/nashiyfranchii",
+            "https://t.me/korubor11",
+            "https://t.me/oejagafa",
+            "https://t.me/videnua",
+            "https://t.me/polandukraine1"
+        ]
+        
+        async def run_account(account_num, phone, api_id, api_hash, affiliate_link):
+            print(f"🚀 Starting Account {account_num}...")
+            
+            try:
+                client = TelegramClient(f'session_acc{account_num}', api_id, api_hash)
+                await client.start(phone)
+                print(f"✅ Account {account_num} connected to Telegram!")
+                
+                messages = [
+                    f"🚀 LIMITED TIME! 500% BONUS on 1Win!\\nUse Promocode: OGGY 🎁\\nQuick Withdrawals! ⚡\\n\\nRegister: {affiliate_link}",
+                    f"💰 GET 500% WELCOME BONUS! 🎯\\nPromocode: OGGY use karo! 💸\\n24/7 Support! 🌟\\n\\n👉 {affiliate_link}",
+                    f"🏆 SPECIAL OFFER! 500% BONUS! 🎁\\n1Win par abhi register karo! 🚀\\nPromocode: OGGY 💎\\n\\n🔗 {affiliate_link}",
+                    f"🎯 HUGE 500% BONUS on 1Win! 💫\\nUse Promocode: OGGY for maximum benefits! 🚀\\n\\n• Bet on Cricket 🏏\\n• Play Casino Games 🎰\\n• Win Jackpots 💸\\n• Quick Payouts ⚡\\n\\n{affiliate_link}",
+                    f"🔥 AMAZING OFFER! Get 500% BONUS on 1Win! 💰\\nUse Promocode: OGGY for extra bonus! 🎁\\n\\n• Sports Betting 🏏\\n• Casino Games 🎰\\n• Live Betting ⚡\\n• Quick Withdrawals 🚀\\n\\n🎯 Register: {affiliate_link}"
+                ]
+                
+                messages_sent = 0
+                for i, group in enumerate(TELEGRAM_GROUPS, 1):
+                    try:
+                        selected_message = random.choice(messages)
+                        await client.send_message(group, selected_message)
+                        messages_sent += 1
+                        print(f"✅ Account {account_num} - Message {i} sent to group!")
+                        
+                        # 2-3 minutes wait between groups
+                        if i < len(TELEGRAM_GROUPS):
+                            wait_time = random.randint(120, 180)
+                            print(f"⏳ Account {account_num} - Waiting {wait_time} seconds...")
+                            await asyncio.sleep(wait_time)
+                            
+                    except Exception as e:
+                        print(f"❌ Account {account_num} - Error in group {i}: {e}")
+                        continue
+                
+                await client.disconnect()
+                print(f"🎉 Account {account_num} - Completed! {messages_sent}/{len(TELEGRAM_GROUPS)} messages sent!")
+                return True
+                
+            except Exception as e:
+                print(f"💥 Account {account_num} - Connection failed: {e}")
+                return False
+        
+        async def main():
+            # Account 1
+            success1 = await run_account(
+                1, 
+                os.environ['PHONE_1'],
+                int(os.environ['API_ID']),
+                os.environ['API_HASH'],
+                os.environ['AFFILIATE_LINK']
+            )
+            
+            if success1:
+                print("⏳ Waiting 10 minutes for Account 2...")
+                await asyncio.sleep(600)
+            
+            # Account 2
+            success2 = await run_account(
+                2,
+                os.environ['PHONE_2'], 
+                int(os.environ['API_ID']),
+                os.environ['API_HASH'],
+                os.environ['AFFILIATE_LINK']
+            )
+            
+            if success2:
+                print("⏳ Waiting 10 minutes for Account 3...")
+                await asyncio.sleep(600)
+            
+            # Account 3
+            success3 = await run_account(
+                3,
+                os.environ['PHONE_3'],
+                int(os.environ['API_ID']),
+                os.environ['API_HASH'], 
+                os.environ['AFFILIATE_LINK']
+            )
+            
+            print("🎉 All accounts processing completed!")
+            total_groups = len(TELEGRAM_GROUPS) * 3
+            print(f"📊 Total messages sent across all accounts: {total_groups}")
+        
+        asyncio.run(main())
+        EOF
+        
+    - name: "Run Telegram Bot"
+      env:
+        API_ID: ${{ secrets.API_ID }}
+        API_HASH: ${{ secrets.API_HASH }}
+        PHONE_1: ${{ secrets.PHONE_1 }}
+        PHONE_2: ${{ secrets.PHONE_2 }}
+        PHONE_3: ${{ secrets.PHONE_3 }}
+        AFFILIATE_LINK: ${{ secrets.AFFILIATE_LINK }}
+      run: python bot_script.py
